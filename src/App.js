@@ -1,23 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+import axios from "axios";
+import dice from "./images/icon-dice.svg";
+import pattern from "./images/pattern-divider-desktop.svg";
 
 function App() {
+  const [advice, setAdvice] = useState("");
+  const [id, setId] = useState("");
+
+  const adviceGenerator = () => {
+    axios.get(`https://api.adviceslip.com/advice`).then((res) => {
+      setAdvice(res.data.slip.advice);
+      setId(res.data.slip.id);
+    });
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="outer-container">
+      <div className="container">
+        {id && <h2>ADVICE #{id}</h2>}
+        <h1>{advice}</h1>
+        <div className="patternDiv">
+          <img src={pattern} alt="desktop" />
+        </div>
+        <button onClick={adviceGenerator}>
+          <img src={dice} alt="dice" />
+        </button>
+      </div>
     </div>
   );
 }
